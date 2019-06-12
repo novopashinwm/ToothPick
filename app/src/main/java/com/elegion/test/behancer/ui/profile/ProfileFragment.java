@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.databinding.ProfileBinding;
 
+import javax.inject.Inject;
+
 /**
  * Created by Vladislav Falzan.
  */
@@ -19,7 +21,8 @@ import com.elegion.test.behancer.databinding.ProfileBinding;
 public class ProfileFragment extends Fragment {
 
     private String username = "";
-    private ProfileViewModel mProfileViewModel;
+    @Inject
+    ProfileViewModel mProfileViewModel;
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
@@ -28,17 +31,6 @@ public class ProfileFragment extends Fragment {
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Storage.StorageOwner) {
-            Storage storage = ((Storage.StorageOwner) context).obtainStorage();
-            mProfileViewModel = new ProfileViewModel(storage);
-
-        }
     }
 
     @Nullable

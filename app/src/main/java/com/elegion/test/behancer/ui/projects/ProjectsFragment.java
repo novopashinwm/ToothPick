@@ -1,5 +1,6 @@
 package com.elegion.test.behancer.ui.projects;
 
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.databinding.ProjectsBinding;
 import com.elegion.test.behancer.ui.profile.ProfileActivity;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
 import com.elegion.test.behancer.utils.CustomFactory;
+
+import javax.inject.Inject;
+
+import toothpick.Scope;
+import toothpick.Toothpick;
 
 /**
  * Created by Vladislav Falzan.
@@ -23,7 +30,9 @@ import com.elegion.test.behancer.utils.CustomFactory;
 
 public class ProjectsFragment extends Fragment {
 
-    private ProjectsViewModel mProjectsViewModel;
+    @Inject
+    ProjectsViewModel mProjectsViewModel;
+
     private ProjectsAdapter.OnItemClickListener mOnItemClickListener = username -> {
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         Bundle args = new Bundle();
@@ -39,17 +48,18 @@ public class ProjectsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Storage.StorageOwner) {
-            Storage storage = ((Storage.StorageOwner) context).obtainStorage();
-            CustomFactory factory = new CustomFactory(storage, mOnItemClickListener, null);
-            mProjectsViewModel = ViewModelProviders.of(this, factory).get(ProjectsViewModel.class);
-        }
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProjectsBinding binding = ProjectsBinding.inflate(inflater, container, false);
+        Scope scope = Toothpick.openScope(AppDelegate.class);
+        Toothpick.inject(this, scope);
+        mProjectsViewModel.updateProjects();
+        mProjectsViewModel.setmOnItemClickListener(mOnItemClickListener);
+
         binding.setVm(mProjectsViewModel);
         binding.setLifecycleOwner(this);
         return binding.getRoot();

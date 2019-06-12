@@ -26,9 +26,6 @@ public class CustomFactory extends ViewModelProvider.NewInstanceFactory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(ProjectsViewModel.class)) {
-            return (T) new ProjectsViewModel(mStorage, mOnItemClickListener);
-        }
 
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

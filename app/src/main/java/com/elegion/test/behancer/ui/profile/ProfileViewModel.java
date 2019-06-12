@@ -6,8 +6,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.elegion.test.behancer.data.Storage;
+import com.elegion.test.behancer.data.api.BehanceApi;
 import com.elegion.test.behancer.data.model.user.User;
 import com.elegion.test.behancer.utils.ApiUtils;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -17,7 +20,12 @@ public class ProfileViewModel {
 
     private String mUsername;
     private Disposable mDisposable;
-    private Storage mStorage;
+
+    @Inject
+    Storage mStorage;
+
+    @Inject
+    BehanceApi mApi;
 
     private ObservableBoolean mIsLoading = new ObservableBoolean(false);
     private ObservableBoolean mIsErrorVisible = new ObservableBoolean(false);
@@ -26,8 +34,8 @@ public class ProfileViewModel {
     private View.OnClickListener mViewClickListener;
 
 
-    public ProfileViewModel(Storage mStorage) {
-        this.mStorage = mStorage;
+    public ProfileViewModel() {
+
     }
 
     public void setmUsername(String username) {
