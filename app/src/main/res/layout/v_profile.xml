@@ -67,14 +67,6 @@
             android:text="@{profile.profile.location}"
             android:layout_below="@id/tv_created_on_details" />
 
-        <Button
-            android:id="@+id/btnShowUserProjects"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/show_projects_text"
-            android:onClickListener="@{profile.ViewClickListener}"
-            android:layout_below="@id/iv_profile"
-            />
     </RelativeLayout>
 
 </layout>

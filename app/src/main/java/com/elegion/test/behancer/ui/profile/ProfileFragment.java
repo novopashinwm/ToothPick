@@ -9,10 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.databinding.ProfileBinding;
-import com.elegion.test.behancer.ui.userprojects.UserProjectsFragment;
 
 /**
  * Created by Vladislav Falzan.
@@ -24,16 +22,6 @@ public class ProfileFragment extends Fragment {
     private ProfileViewModel mProfileViewModel;
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
-
-    private View.OnClickListener mButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new UserProjectsFragment().newInstance(username))
-                    .addToBackStack(String.valueOf(UserProjectsFragment.class))
-                    .commit();
-        }
-    };
 
     public static ProfileFragment newInstance(Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
@@ -69,7 +57,6 @@ public class ProfileFragment extends Fragment {
 
         if (getArguments() != null) {
             username = getArguments().getString(PROFILE_KEY);
-            mProfileViewModel.setViewClickListener(mButtonListener);
         }
 
         if (getActivity() != null) {
@@ -86,7 +73,4 @@ public class ProfileFragment extends Fragment {
         super.onDetach();
     }
 
-    public View.OnClickListener getButtonListener() {
-        return mButtonListener;
-    }
 }

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.ui.projects.ProjectsAdapter;
 import com.elegion.test.behancer.ui.projects.ProjectsViewModel;
-import com.elegion.test.behancer.ui.userprojects.UserProjectsViewModel;
 
 /**
  * @author Azret Magometov
@@ -31,10 +30,6 @@ public class CustomFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new ProjectsViewModel(mStorage, mOnItemClickListener);
         }
 
-        if (modelClass.isAssignableFrom(UserProjectsViewModel.class)) {
-            return (T) new UserProjectsViewModel(mStorage,  mUsername);
-        }
         throw new IllegalArgumentException("Unknown ViewModel class");
-
     }
 }
