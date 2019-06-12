@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="profile"
+            type="com.elegion.test.behancer.ui.profile.ProfileViewModel" />
+
+        <import
+            alias="utils"
+            type="com.elegion.test.behancer.utils.DateUtils" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/view_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            app:imageUrl="@{profile.profile.image.photoUrl}"
+            android:contentDescription="@string/content_description_details" />
+
+        <TextView
+            android:id="@+id/tv_display_name_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_profile"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/iv_profile"
+            android:layout_toRightOf="@id/iv_profile"
+            android:text="@{profile.profile.displayName}"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_username_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_display_name_details"
+            android:layout_alignStart="@id/tv_display_name_details"
+            android:text="@{profile.profile.username}"
+            android:layout_below="@id/tv_display_name_details" />
+
+        <TextView
+            android:id="@+id/tv_created_on_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_username_details"
+            android:layout_alignStart="@id/tv_username_details"
+            android:text="@{utils.format(profile.profile.createdOn)}"
+            android:layout_below="@id/tv_username_details" />
+
+        <TextView
+            android:id="@+id/tv_location_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_created_on_details"
+            android:layout_alignStart="@id/tv_created_on_details"
+            android:text="@{profile.profile.location}"
+            android:layout_below="@id/tv_created_on_details" />
+
+        <Button
+            android:id="@+id/btnShowUserProjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/show_projects_text"
+            android:onClickListener="@{profile.ViewClickListener}"
+            android:layout_below="@id/iv_profile"
+            />
+    </RelativeLayout>
+
+</layout>

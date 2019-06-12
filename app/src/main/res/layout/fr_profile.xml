@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data class="ProfileBinding">
+
+        <import
+            alias="V"
+            type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.elegion.test.behancer.ui.profile.ProfileViewModel" />
+
+    </data>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        bind:onRefresh="@{vm.onRefreshListener}"
+        bind:refreshState="@{vm.isLoading}">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <include
+                layout="@layout/v_profile"
+                bind:profile="@{vm}"
+                android:visibility="@{vm.isErrorVisible ? V.GONE : V.VISIBLE}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{vm.isErrorVisible ? V.VISIBLE : V.GONE}">
+                <include
+                    layout="@layout/v_error"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</layout>
