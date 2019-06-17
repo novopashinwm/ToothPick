@@ -51,12 +51,18 @@ public class ProjectsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Scope scope = Toothpick.openScopes(AppDelegate.class, ProjectsViewModel.class,this );
+        Toothpick.inject(this, scope);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProjectsBinding binding = ProjectsBinding.inflate(inflater, container, false);
-        Scope scope = Toothpick.openScope(AppDelegate.class);
-        Toothpick.inject(this, scope);
+
         mProjectsViewModel.updateProjects();
         mProjectsViewModel.setmOnItemClickListener(mOnItemClickListener);
 
