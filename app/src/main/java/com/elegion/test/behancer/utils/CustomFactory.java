@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.ui.projects.ProjectsAdapter;
 import com.elegion.test.behancer.ui.projects.ProjectsViewModel;
 

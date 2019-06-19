@@ -2,6 +2,7 @@ package com.elegion.test.behancer.ui.profile;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,7 +22,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import toothpick.Toothpick;
 
-public class ProfileViewModel {
+public class ProfileViewModel extends ViewModel {
 
     private String mUsername;
     private Disposable mDisposable;
@@ -32,12 +33,11 @@ public class ProfileViewModel {
     @Inject
     BehanceApi mApi;
 
-    private ObservableBoolean mIsLoading = new ObservableBoolean(false);
-    private ObservableBoolean mIsErrorVisible = new ObservableBoolean(false);
-    private ObservableField<User> mProfile = new ObservableField<>();
-    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = this::loadProfile;
-    private View.OnClickListener mViewClickListener;
+    private MutableLiveData<Boolean> mIsLoading = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsError = new MutableLiveData<>();
+    private ObservableField<User> mProfile = new ObservableField<>();
+
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = this::loadProfile;
 
     private LiveData<UserWithImage> mUser;
 
@@ -46,61 +46,49 @@ public class ProfileViewModel {
         mIsError.postValue(false);
         mUsername = username;
         mUser = mStorage.getUserWithImageLiveByName(username);
-        getProfile();
-    }
-
-
-    public void setmUsername(String username) {
-        this.mUsername = username;
+        loadProfile();
     }
 
     private void loadProfile() {
-        mDisposable = ApiUtils.getApiService().getUserInfo(mUsername)
+        mDisposable = mApi.getUserInfo(mUsername)
+                .doOnSuccess(response -> mIsError.postValue(false))
+                .doOnSubscribe(disposable -> mIsLoading.postValue(true))
+                .doFinally(() -> mIsLoading.postValue(false))
                 .subscribeOn(Schedulers.io())
-                .doOnSuccess(response -> mStorage.insertUser(response))
-                .onErrorReturn(throwable ->
-                        ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.getClass()) ?
-                                mStorage.getUser(mUsername) :
-                                null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mIsLoading.set(true))
-                .doFinally(() -> mIsLoading.set(false))
                 .subscribe(
-                        response -> {
-                            mIsErrorVisible.set(false);
+                        response -> { mStorage.insertUser(response);
                             mProfile.set(response.getUser());
                         },
-                        throwable -> mIsErrorVisible.set(true));
+                        throwable -> mIsError.postValue(mUser.getValue() == null));
+
     }
 
     public SwipeRefreshLayout.OnRefreshListener getOnRefreshListener() {
         return mOnRefreshListener;
     }
 
-    public void dispatchDetach() {
+    @Override
+    public void onCleared() {
         mStorage = null;
         if (mDisposable != null) {
             mDisposable.dispose();
         }
     }
 
-    public ObservableBoolean getIsLoading() {
+    public MutableLiveData<Boolean> getIsLoading() {
         return mIsLoading;
     }
 
-    public ObservableBoolean getIsErrorVisible() {
-        return mIsErrorVisible;
+    public MutableLiveData<Boolean> getIsErrorVisible() {
+        return mIsError;
+    }
+
+    public LiveData<UserWithImage> getUserWithImage() {
+        return mUser;
     }
 
     public ObservableField<User> getProfile() {
         return mProfile;
     }
 
-    public View.OnClickListener getViewClickListener() {
-        return mViewClickListener;
-    }
-
-    public void setViewClickListener(View.OnClickListener mViewClickListener) {
-        this.mViewClickListener = mViewClickListener;
-    }
 }

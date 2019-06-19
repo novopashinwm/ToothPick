@@ -26,6 +26,7 @@ import toothpick.Toothpick;
 public class ProjectsViewModel extends ViewModel {
 
     private Disposable mDisposable;
+
     @Inject
     Storage mStorage;
 
@@ -33,7 +34,7 @@ public class ProjectsViewModel extends ViewModel {
     BehanceApi mApi;
 
     ProjectsAdapter.OnItemClickListener mOnItemClickListener;
-
+    private LiveData<PagedList<RichProject>> mProjects;
     private MutableLiveData<Boolean> mIsLoading = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsErrorVisible = new MutableLiveData<>();
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = this::updateProjects;
@@ -42,6 +43,7 @@ public class ProjectsViewModel extends ViewModel {
     public ProjectsViewModel(ProjectsAdapter.OnItemClickListener onItemClickListener) {
         Toothpick.inject(this, Toothpick.openScope(AppDelegate.class));
         mOnItemClickListener = onItemClickListener;
+        mProjects = mStorage.getProjectsPaged();
         updateProjects();
 
     }
@@ -56,15 +58,10 @@ public class ProjectsViewModel extends ViewModel {
                 .subscribe(
                         response -> mStorage.insertProjects(response),
                         throwable -> {
-                            boolean value = mStorage.getProjectsPaged().getValue() == null
-                                    || mStorage.getProjectsPaged().getValue().size() == 0;
+                            boolean value = mProjects.getValue() == null || mProjects.getValue().size() == 0;
                             mIsErrorVisible.postValue(value);
                         });
 
-    }
-
-    public void setmOnItemClickListener(ProjectsAdapter.OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
     }
 
     @Override
@@ -88,7 +85,7 @@ public class ProjectsViewModel extends ViewModel {
     }
 
     public LiveData<PagedList<RichProject>> getProjects() {
-        return mStorage.getProjectsPaged();
+        return mProjects;
     }
 
     public SwipeRefreshLayout.OnRefreshListener getOnRefreshListener() {
