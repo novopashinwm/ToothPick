@@ -1,13 +1,17 @@
 package com.elegion.test.behancer.ui.profile;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
+import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
 import com.elegion.test.behancer.data.model.user.User;
+import com.elegion.test.behancer.data.model.user.UserWithImage;
 import com.elegion.test.behancer.utils.ApiUtils;
 
 import javax.inject.Inject;
@@ -15,6 +19,7 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import toothpick.Toothpick;
 
 public class ProfileViewModel {
 
@@ -32,17 +37,24 @@ public class ProfileViewModel {
     private ObservableField<User> mProfile = new ObservableField<>();
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = this::loadProfile;
     private View.OnClickListener mViewClickListener;
+    private MutableLiveData<Boolean> mIsError = new MutableLiveData<>();
 
+    private LiveData<UserWithImage> mUser;
 
-    public ProfileViewModel() {
-
+    public ProfileViewModel( String username) {
+        Toothpick.inject(this, Toothpick.openScope(AppDelegate.class));
+        mIsError.postValue(false);
+        mUsername = username;
+        mUser = mStorage.getUserWithImageLiveByName(username);
+        getProfile();
     }
+
 
     public void setmUsername(String username) {
         this.mUsername = username;
     }
 
-    public void loadProfile() {
+    private void loadProfile() {
         mDisposable = ApiUtils.getApiService().getUserInfo(mUsername)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess(response -> mStorage.insertUser(response))

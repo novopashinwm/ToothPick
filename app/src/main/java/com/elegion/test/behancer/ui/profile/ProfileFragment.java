@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
         }
 
         mProfileViewModel.setmUsername(username);
-        mProfileViewModel.loadProfile();
+
     }
 
     @Override

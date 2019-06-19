@@ -5,6 +5,8 @@ import android.arch.persistence.room.Room;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.database.BehanceDatabase;
+import com.elegion.test.behancer.ui.profile.ProfileViewModel;
+import com.elegion.test.behancer.ui.projects.ProjectsViewModel;
 
 import toothpick.config.Module;
 
@@ -29,4 +31,14 @@ public class AppModule extends Module {
 
         return new Storage(database.getBehanceDao());
     }
+
+    ProjectsViewModel getProjectsViewModel(){
+        return new ProjectsViewModel(null);
+
+    }
+
+    ProfileViewModel getProfileViewModel(){
+        return new ProfileViewModel(null);
+    }
+
 }

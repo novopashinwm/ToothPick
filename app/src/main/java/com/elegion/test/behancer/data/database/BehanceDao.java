@@ -13,6 +13,7 @@ import com.elegion.test.behancer.data.model.project.Project;
 import com.elegion.test.behancer.data.model.project.RichProject;
 import com.elegion.test.behancer.data.model.user.Image;
 import com.elegion.test.behancer.data.model.user.User;
+import com.elegion.test.behancer.data.model.user.UserWithImage;
 
 import java.util.List;
 
@@ -73,4 +74,8 @@ public interface BehanceDao {
 
     @Query("select * from image")
     List<Image> getImages();
+
+    @Query("select username, location, created_on, display_name, image.photo_url as photoUrl from user inner join image on user.id = image.user_id where username = :userName")
+    LiveData<UserWithImage> getUserWithImageLiveByName(String userName);
+
 }

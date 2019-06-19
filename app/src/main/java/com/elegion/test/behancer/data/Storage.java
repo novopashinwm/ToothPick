@@ -12,6 +12,7 @@ import com.elegion.test.behancer.data.model.project.RichProject;
 import com.elegion.test.behancer.data.model.user.Image;
 import com.elegion.test.behancer.data.model.user.User;
 import com.elegion.test.behancer.data.model.user.UserResponse;
+import com.elegion.test.behancer.data.model.user.UserWithImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,5 +105,10 @@ public class Storage {
     public interface StorageOwner {
         Storage obtainStorage();
     }
+
+    public LiveData<UserWithImage> getUserWithImageLiveByName(String name) {
+        return mBehanceDao.getUserWithImageLiveByName(name);
+    }
+
 
 }

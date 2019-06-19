@@ -48,7 +48,8 @@ public class ProjectsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        CustomFactory factory = new CustomFactory(mOnItemClickListener);
+        mProjectsViewModel = ViewModelProviders.of(this, factory).get(ProjectsViewModel.class);
     }
 
     @Override
@@ -58,13 +59,12 @@ public class ProjectsFragment extends Fragment {
         Toothpick.inject(this, scope);
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProjectsBinding binding = ProjectsBinding.inflate(inflater, container, false);
-
-        mProjectsViewModel.updateProjects();
-        mProjectsViewModel.setmOnItemClickListener(mOnItemClickListener);
 
         binding.setVm(mProjectsViewModel);
         binding.setLifecycleOwner(this);

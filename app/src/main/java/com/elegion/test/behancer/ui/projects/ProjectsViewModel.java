@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.paging.PagedList;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import toothpick.Toothpick;
 
 /**
  * @author Azret Magometov
@@ -26,6 +28,7 @@ public class ProjectsViewModel extends ViewModel {
     private Disposable mDisposable;
     @Inject
     Storage mStorage;
+
     @Inject
     BehanceApi mApi;
 
@@ -36,11 +39,14 @@ public class ProjectsViewModel extends ViewModel {
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = this::updateProjects;
 
     @Inject
-    public ProjectsViewModel() {
+    public ProjectsViewModel(ProjectsAdapter.OnItemClickListener onItemClickListener) {
+        Toothpick.inject(this, Toothpick.openScope(AppDelegate.class));
+        mOnItemClickListener = onItemClickListener;
+        updateProjects();
 
     }
 
-    public void updateProjects() {
+    private void updateProjects() {
         mDisposable = mApi.getProjects(BuildConfig.API_QUERY)
                 .map(ProjectResponse::getProjects)
                 .doOnSubscribe(disposable -> mIsLoading.postValue(true))

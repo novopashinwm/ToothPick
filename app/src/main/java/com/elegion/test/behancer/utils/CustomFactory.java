@@ -13,20 +13,15 @@ import com.elegion.test.behancer.ui.projects.ProjectsViewModel;
  */
 public class CustomFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private Storage mStorage;
     private ProjectsAdapter.OnItemClickListener mOnItemClickListener;
-    private String mUsername;
 
-    public CustomFactory(Storage storage, ProjectsAdapter.OnItemClickListener onItemClickListener, String username) {
-        mStorage = storage;
+    public CustomFactory(ProjectsAdapter.OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
-        mUsername = username;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-
-        throw new IllegalArgumentException("Unknown ViewModel class");
+        return (T) new ProjectsViewModel( mOnItemClickListener);
     }
 }
