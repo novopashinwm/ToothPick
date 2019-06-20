@@ -3,21 +3,17 @@ package com.elegion.test.behancer.ui.profile;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
 
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
 import com.elegion.test.behancer.data.model.user.User;
 import com.elegion.test.behancer.data.model.user.UserWithImage;
-import com.elegion.test.behancer.utils.ApiUtils;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import toothpick.Toothpick;
@@ -41,6 +37,7 @@ public class ProfileViewModel extends ViewModel {
 
     private LiveData<UserWithImage> mUser;
 
+    @Inject
     public ProfileViewModel( String username) {
         Toothpick.inject(this, Toothpick.openScope(AppDelegate.class));
         mIsError.postValue(false);
